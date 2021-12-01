@@ -12,7 +12,7 @@ import msg_text
 import subsidiary
 import inline
 
-# тест гита
+# тест
 
 logging.basicConfig(level=logging.INFO)
 
