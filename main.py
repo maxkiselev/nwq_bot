@@ -12,6 +12,8 @@ import msg_text
 import subsidiary
 import inline
 
+# тест гита
+
 logging.basicConfig(level=logging.INFO)
 
 storage = MemoryStorage()
