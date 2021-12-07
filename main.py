@@ -151,12 +151,27 @@ async def ask_paper(call: types.CallbackQuery):
 async def get_my_list(call: types.CallbackQuery):
     my_list = db_work.get_my_watch_list(call.from_user.id)
     prt_message = 'В избранном находятся следующие тикеры: \n'
+    d_dict = {}
     for i in my_list:
         shorts = subsidiary.subs(i[0].strip()[1:])
         shorts.ticket = i[0].strip()[1:]
         shorts.get_parser_finviz()
-        prt_message = prt_message + '#' + str(shorts.final_short['tiker']) + ' ' + str(shorts.final_short['title']) + ' ' \
-            '' + str(shorts.final_short['volume']) + '\n'
+        if shorts.final_short['volume'][:-1] == '':
+            shorts.final_short['volume'] = '0.0'
+        if float(shorts.final_short['volume'][:-1]) > 0:
+            d_dict[f"{shorts.final_short['tiker']}"] = shorts.final_short['volume'][:-1]
+        else:
+            d_dict[f"{shorts.final_short['tiker']}"] = str(float(0))
+
+    sorted_d_dist = {}
+    sorted_key = sorted(d_dict, key=d_dict.get, reverse=True)
+    for i in sorted_key:
+        sorted_d_dist[i] = d_dict[i]
+
+    print(sorted_d_dist)
+
+    for i in sorted_d_dist:
+        prt_message = prt_message + '#' + str(i) + ' Short Float ' + str(sorted_d_dist[i]) + '%' + '\n'
 
     await bot.send_message(chat_id=call.from_user.id, text=prt_message)
 
